@@ -65,3 +65,8 @@ void output(sf::RenderWindow& l_wnd)
 {
     gameStateMgr.getCurrentState()->render(l_wnd);
 }
+
+static void intel()
+{
+    auto p = std::string("nope");
+}
