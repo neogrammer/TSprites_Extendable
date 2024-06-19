@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\game_state">
+      <UniqueIdentifier>{96a40802-52c3-4175-8881-74104886c9e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{fc035799-efce-4466-b4e7-922ef7a51f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\mgrs">
+      <UniqueIdentifier>{9e7c788f-44d6-45aa-a7f7-e60b4c8b5444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mgrs">
+      <UniqueIdentifier>{bf3ddc7c-c8d1-4780-bb93-40cbdd935f43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game_states">
+      <UniqueIdentifier>{6edda304-584d-4273-a9b6-f1d6badeb793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\concepts">
+      <UniqueIdentifier>{ee94e431-768f-4fa6-8d4c-b5d43ac87d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\concepts\sprites">
+      <UniqueIdentifier>{8133f4b6-781b-45e8-b24f-9c9920694bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{70ba0fdb-8c62-4121-ab5e-278c1fba03a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{1f381477-a994-4a82-b424-3c8ff52ab395}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="GameStateMgr.hpp">
+      <Filter>Header Files\core\mgrs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateMgr.cpp">
+      <Filter>Source Files\mgrs</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\game_states</Filter>
+    </ClCompile>
+    <ClCompile Include="sandbox_state.cpp">
+      <Filter>Source Files\game_states</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashState.cpp">
+      <Filter>Source Files\game_states</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameState.hpp">
+      <Filter>Header Files\game_state</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.hpp">
+      <Filter>Header Files\concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites.hpp">
+      <Filter>Header Files\concepts\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.hpp">
+      <Filter>Header Files\concepts\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Header Files\concepts\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.hpp">
+      <Filter>Header Files\concepts\sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashState.hpp">
+      <Filter>Header Files\game_state</Filter>
+    </ClInclude>
+    <ClInclude Include="SandboxState.hpp">
+      <Filter>Header Files\game_state</Filter>
+    </ClInclude>
+    <ClInclude Include="util.hpp">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
