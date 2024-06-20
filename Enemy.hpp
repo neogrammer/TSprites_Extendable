@@ -1,32 +1,25 @@
 #ifndef ENEMY_HPP__
 #define ENEMY_HPP__
 
-#include "Sprite.hpp"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-
+class Sprite;
 
 class Enemy {
+    float posx = 0.f, posy = 0.f;
 public:
-    void update(const sf::Time& l_dt) {
-        std::cout << "Updating a Enemy Sprite\n";
+    Enemy();
+    void update(const sf::Time& l_dt); 
 
-    }
+    void render(sf::RenderWindow& l_wnd);
 
-    void render(sf::RenderWindow& l_wnd) {
-        sf::RectangleShape shape(sf::Vector2f(100, 50));
-        shape.setFillColor(sf::Color::Red);
-        l_wnd.draw(shape);
-    }
+    void finalize();
 };
 
-void update(Enemy& player, const sf::Time& deltaTime) {
-    player.update(deltaTime);
-}
+void update(Enemy& player, const sf::Time& deltaTime);
 
-void render(Enemy& player, sf::RenderWindow& window) {
-    player.render(window);
-}
+void render(Enemy& player, sf::RenderWindow& window);
 
 #endif

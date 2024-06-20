@@ -142,22 +142,33 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateMgr.cpp" />
+    <ClCompile Include="IntroStage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="sandbox_state.cpp" />
     <ClCompile Include="SplashState.cpp" />
+    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageMgr.cpp" />
+    <ClCompile Include="StageSandbox.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="GameState.hpp" />
+    <ClInclude Include="IntroStage.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="SandboxState.hpp" />
     <ClInclude Include="SplashState.hpp" />
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="sprites.hpp" />
+    <ClInclude Include="Stage.hpp" />
+    <ClInclude Include="StageMgr.hpp" />
+    <ClInclude Include="StageSandbox.hpp" />
     <ClInclude Include="util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

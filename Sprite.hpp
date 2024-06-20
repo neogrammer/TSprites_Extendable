@@ -84,12 +84,21 @@ class Sprite
 
 	std::unique_ptr<SpriteConcept> pimpl;
 public:
+	//   Here is where the templated fsm should live
+	
+
+
 
 	template <typename SpriteT>
 	Sprite(SpriteT sprite)
 		: pimpl{ std::make_unique<SpriteModel<SpriteT>>(std::move(sprite)) }
 	{}
 
+	
+	//   template <typename SpriteT, typename DerivedFSM, typename StateVariant, typename Transitions>
+	//  using playerFsm = fsm<PlayerStateVar, PlayerEvent>
+	//  : pimpl{std::make_unique<fsm<DerivedFSM>(l_stateVar
+	
 	Sprite(const Sprite& o)
 		: pimpl{ o.pimpl->clone() }
 	{}

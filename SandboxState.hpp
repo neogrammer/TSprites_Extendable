@@ -3,10 +3,15 @@
 #include "GameState.hpp"
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Sprite.hpp"
+#include <memory>
+class Stage;
 
+class StageMgr;
 class GameStateMgr;
 // SANDBOX STATE
+
+
+// this is beng set up for a verbatim almost copy as the PlayState, containing the StageMgr
 struct SandboxState : GameState {
 public:
     SandboxState(GameStateMgr& l_mgr);
@@ -15,8 +20,7 @@ public:
     void update(const sf::Time& l_dt) override final;
     void render(sf::RenderWindow& l_wnd) override final;
 private:
-    std::vector<Sprite> sprites_;
-
+    std::unique_ptr<StageMgr> stageMgr_;
 };
 
 #endif

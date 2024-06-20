@@ -1,38 +1,36 @@
 #include "SandboxState.hpp"
-#include "sprites.hpp"
 #include "GameStateMgr.hpp"
+#include "IntroStage.hpp"
+#include "StageMgr.hpp"
+#include "Stage.hpp"
 #include "util.hpp"
 #include <iostream>
+#include <memory>
+#include <utility>
 // SANDBOX STATE
 SandboxState::SandboxState(GameStateMgr& l_mgr) 
 	: GameState{ l_mgr }
-	, sprites_{}
+	, stageMgr_{}
 {
-	sprites_.clear();
-
-	sprites_.emplace_back(Player{});
-	sprites_.emplace_back(Enemy{});
-	sprites_.emplace_back(Bullet{});
-
+	stageMgr_ = std::make_unique<StageMgr>();
 }
 
 void SandboxState::handleInput() 
 { 
+	stageMgr_->getCurrentStage()->handleInput();
 	return; 
 }
 
 
 void SandboxState::update(const sf::Time& l_dt) 
 { 
-	updateAllSprites(sprites_, l_dt);
+	stageMgr_->getCurrentStage()->update(l_dt);
 	return;
-
 }
 
 
 void SandboxState::render(sf::RenderWindow& l_wnd) 
 { 
-	renderAllSprites(sprites_, l_wnd);
-	std::cout << " End of one game frame " << std::endl;
+	stageMgr_->getCurrentStage()->render(l_wnd);
 	return; 
 }

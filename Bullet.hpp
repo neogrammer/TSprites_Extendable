@@ -2,30 +2,23 @@
 #ifndef BULLET_HPP__
 #define BULLET_HPP__
 
-#include "Sprite.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
+class Sprite;
 
 class Bullet {
-public:
-    void update(const sf::Time& l_dt) {
-        std::cout << "Updating a Bullet Sprite\n";
-    }
+    float posx = 0.f, posy = 0.f;
 
-    void render(sf::RenderWindow& l_wnd) {
-        sf::CircleShape shape(10);
-        shape.setFillColor(sf::Color::Yellow);
-        l_wnd.draw(shape);
-    }
+public:
+
+    Bullet();
+    void update(const sf::Time& l_dt);
+    void render(sf::RenderWindow& l_wnd);
+
+    void finalize();
 };
 
-void update(Bullet& player, const sf::Time& deltaTime) {
-    player.update(deltaTime);
-}
-
-void render(Bullet& player, sf::RenderWindow& window) {
-    player.render(window);
-}
-
+void update(Bullet& bullet, const sf::Time& deltaTime);
+void render(Bullet& bullet, sf::RenderWindow& window);
 #endif
+
