@@ -12,6 +12,7 @@ public:
 	float maxY{ 500.f }, gravity{ 0.0f }, maxGravity{ 980.f };
 	float runSpd{ 2.6f }, maxRunSpd{ 200.f };
 	float dt{ 0.f };
+	bool facingRight{ true };
 
 public:
 	

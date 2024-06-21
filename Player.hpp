@@ -54,6 +54,32 @@ struct PlayerTransitions
         return states_player::Idle{ };
     }
 
+
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganMovingLeftEvent& e)
+    {
+
+        return states_player::MovingLeft{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganMovingRightEvent& e)
+    {
+
+        return states_player::MovingRight{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::MovingRight&, const StoppedMovingRightEvent& e)
+    {
+
+        return states_player::Idle{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::MovingLeft&, const StoppedMovingLeftEvent& e)
+    {
+
+        return states_player::Idle{ };
+    }
+
+
    
 
     // default
@@ -72,6 +98,7 @@ class Player {
 public:
     sf::Texture tex;
     sf::IntRect currFrame;
+    PlayerAnim currAnimation{ PlayerAnim::InAirRight };
     std::map<PlayerAnim, std::vector<sf::IntRect> > animMap = {
         {
             PlayerAnim::IdleRight, std::vector<sf::IntRect> {
@@ -156,29 +183,10 @@ public:
 
     Player_FSM playerFSM;
 
-
+    // logic for how the player interacts with the system defined in this function
+    // as you are aware the correct state the user is in, and can code for that specific state logic, while being able to
+    // change the state correctly by dispathing events to the playerFSM
     void update(const sf::Time& l_dt);
-        // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur
-        // dispatch(fsm, eventBuffer[0], 1, 2, 3 ..);  <- this updates the sprite data via the transitions passed in when creating the fsm
-        // spr.setPosition(this->getPosition())
-        // 
-        //  ONLY SETTING THE POSITION FOR COLLISION DETECTION TO BE ABLE TO TEST ITS CURRENT POSITION, animation not neccesary .. YET...
-
-
-        // after this is called on all sprites, collision detection checks and may put an event into this sprites input buffer to be handled
-        //   , a few maybe, as the collision detection system knows a couple events itsef which goes right into this buffer
-    
-
-    // this gets called right before rendering to update any sprites that need to be re-evaluated after collision detection
-    // update position again,  animation IS neccessary this time
-    // void finalize(){ 
-    // dispatch(fsm, eventBuffer[0], [1], [2]..);
-    // spr.setPosition(this->getPosition();
-    // currStateName = fsm.getCurrentStateName();        
-    // changeAnimationIfNeeded(currStateName);
-    // spr.setTextureRect(currAnimFrame);
-    
-
     void render(sf::RenderWindow& l_wnd); 
     void finalize();
 

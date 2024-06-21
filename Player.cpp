@@ -19,13 +19,25 @@ Player::Player()
 
     playerFSM.posy = 500.f;
     std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+    if (playerFSM.facingRight)
+    {
+        currFrame = animMap[PlayerAnim::InAirRight].at(0);
 
-    currFrame = animMap[PlayerAnim::InAirRight].at(0);
+    }
+    else
+    {
+        currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+
+    }
     //this->currAnim = PlayerAnim::InAirRight;
 
 }
 
 
+
+
+//  All the logic for what happens to the players state based on what state they are in goes here and the data for the player 
+//  is in playerFSM. structure, and the sprite when generated on the fly will use that information and the currFrame as the textureRect
 
 void Player::update(const sf::Time& l_dt) {
 
@@ -77,7 +89,12 @@ void Player::update(const sf::Time& l_dt) {
 
             playerFSM.vely = 0.f;
             playerFSM.jumpHeight = 0;
-            currFrame = animMap[PlayerAnim::IdleRight].at(0);
+
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::IdleRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
+
             //currAnim = PlayerAnim::IdleRight;
             dispatch(playerFSM, LandedEvent{});
 
@@ -91,32 +108,90 @@ void Player::update(const sf::Time& l_dt) {
         {
             playerFSM.vely = -1000.f;
             playerFSM.jumpHeight = 0;
-            currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+
             //currAnim = PlayerAnim::IdleRight;
                 dispatch(playerFSM, JumpEvent{1000});
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            playerFSM.velx = -240.f;
+            playerFSM.facingRight = false;
+            currFrame = animMap[PlayerAnim::RunningLeft].at(0);
+            dispatch(playerFSM, BeganMovingLeftEvent{});
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 240.f;
+            playerFSM.facingRight = true;
+            currFrame = animMap[PlayerAnim::RunningRight].at(0);
+            dispatch(playerFSM, BeganMovingRightEvent{});
+        }
+        else
+        {
+            playerFSM.velx = 0.f;
+        }
     }
-   
-    // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur
-    // dispatch(fsm, eventBuffer[0], 1, 2, 3 ..);  <- this updates the sprite data via the transitions passed in when creating the fsm
-    // spr.setPosition(this->getPosition())
-    // 
-    //  ONLY SETTING THE POSITION FOR COLLISION DETECTION TO BE ABLE TO TEST ITS CURRENT POSITION, animation not neccesary .. YET...
+    else if (playerFSM.isType(states_player::MovingLeft{}))
+    {
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            playerFSM.velx = 0.f;
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            {
+                currFrame = animMap[PlayerAnim::IdleRight].at(0);
+
+            }
+            else
+            {
+                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
+            }
+            dispatch(playerFSM, StoppedMovingLeftEvent{});
+        }
+    }
+    else if (playerFSM.isType(states_player::RisingAndMovingLeft{})) {}
+    else if (playerFSM.isType(states_player::FallingAndMovingLeft{})) {}
+    else if (playerFSM.isType(states_player::MovingRight{}))
+    {
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 0.f;
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            {
+                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
+
+            }
+            else
+            {
+                currFrame = animMap[PlayerAnim::IdleRight].at(0);
+            }
+            dispatch(playerFSM, StoppedMovingRightEvent{});
+        }
+    }
+    else if (playerFSM.isType(states_player::FallingAndMovingRight{})){}
+    else if (playerFSM.isType(states_player::FallingAndMovingRight{})){}
+    else if (playerFSM.isType(states_player::Shooting{})){}
+    else if (playerFSM.isType(states_player::MovingLeftAndShooting{})){ }
+    else if (playerFSM.isType(states_player::MovingRightAndShooting{})) { }    
+    else if (playerFSM.isType(states_player::RisingAndShooting{})) { }
+    else if (playerFSM.isType(states_player::FallingAndShooting{})) {  }
+    else if (playerFSM.isType(states_player::RisingAndMovingLeftAndShooting{})){}
+    else if (playerFSM.isType(states_player::FallingAndMovingLeftAndShooting{})) {}
+    else if (playerFSM.isType(states_player::RisingAndMovingRightAndShooting{})) { }
+    else if (playerFSM.isType(states_player::FallingAndMovingRightAndShooting{})) { }
    
 
-    // after this is called on all sprites, collision detection checks and may put an event into this sprites input buffer to be handled
-    //   , a few maybe, as the collision detection system knows a couple events itsef which goes right into this buffer
 }
-
-// this gets called right before rendering to update any sprites that need to be re-evaluated after collision detection
-// update position again,  animation IS neccessary this time
-// void finalize(){ 
-// dispatch(fsm, eventBuffer[0], [1], [2]..);
-// spr.setPosition(this->getPosition();
-// currStateName = fsm.getCurrentStateName();        
-// changeAnimationIfNeeded(currStateName);
-// spr.setTextureRect(currAnimFrame);
-
 
 void Player::render(sf::RenderWindow& l_wnd) {
 
