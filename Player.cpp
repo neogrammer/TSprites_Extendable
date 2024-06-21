@@ -5,17 +5,22 @@
 Player::Player()
     : tex{}
     , playerFSM{}
+    //, currAnim{PlayerAnim::IdleRight}
+    , currFrame{}
 {
     if (!tex.loadFromFile("assets/textures/player_atlas84x84.png"))
     {
         std::cout << "Unable to load texture" << std::endl;
     }
 
-    playerFSM.gravity = 1.f;
+    playerFSM.gravity = 2.f;
     dispatch(playerFSM, JumpEvent{ 1000 });
 
-   
-    
+    playerFSM.posy = 200.f;
+    std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+
+    currFrame = animMap[PlayerAnim::InAirRight].at(0);
+    //this->currAnim = PlayerAnim::InAirRight;
 
 }
 
@@ -24,6 +29,9 @@ Player::Player()
 void Player::update(const sf::Time& l_dt) {
 
     playerFSM.dt = l_dt.asSeconds();
+
+    //playerFSM.velx = 0.f;
+   // playerFSM.vely = 0.f;
    
 
 
@@ -31,21 +39,58 @@ void Player::update(const sf::Time& l_dt) {
     if (playerFSM.isType(states_player::Rising{}))
     {
         playerFSM.jumpHeight += playerFSM.gravity;
-        playerFSM.vely -= playerFSM.jumpHeight * l_dt.asSeconds();
-        playerFSM.posy += playerFSM.vely;
+        playerFSM.vely -= playerFSM.jumpHeight;
+        playerFSM.posy += (playerFSM.vely * ( 1 - (playerFSM.jumpHeight / playerFSM.jumpHeightMax))) * l_dt.asSeconds();
         playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
 
         std::cout << playerFSM.jumpHeight << ", " << std::endl;
         if (playerFSM.jumpHeight > playerFSM.jumpHeightMax)
         {
             std::cout << "Reached peak of jump" << std::endl;
+            std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+            playerFSM.vely = 10.f;
 
             dispatch(playerFSM, ReachedJumpPeakEvent{});
 
         }
     }
-    else {
+    else if (playerFSM.isType(states_player::Falling{}))
+    {
+        if (playerFSM.vely == 0.f)
+            playerFSM.vely = 10.f;
+        playerFSM.vely *= playerFSM.vely;
+        playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
 
+        if (playerFSM.posy + playerFSM.height > playerFSM.maxY)
+        {
+            playerFSM.posy = playerFSM.maxY - playerFSM.height;
+            std::cout << "Landed" << std::endl;
+
+            std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+            std::cout << "PlayerFSM.vely = " << playerFSM.vely << std::endl;
+           // std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+
+
+
+            playerFSM.vely = 0.f;
+            playerFSM.jumpHeight = 0;
+            currFrame = animMap[PlayerAnim::IdleRight].at(0);
+            //currAnim = PlayerAnim::IdleRight;
+            dispatch(playerFSM, LandedEvent{});
+
+
+        }
+
+    }
+    else if (playerFSM.isType(states_player::Idle{}))
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            playerFSM.jumpHeight = 0;
+            currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            //currAnim = PlayerAnim::IdleRight;
+                dispatch(playerFSM, JumpEvent{1000});
+        }
     }
     // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur
     // dispatch(fsm, eventBuffer[0], 1, 2, 3 ..);  <- this updates the sprite data via the transitions passed in when creating the fsm
@@ -74,8 +119,8 @@ void Player::render(sf::RenderWindow& l_wnd) {
     // finalize();
     sf::Sprite tmpSpr;
     tmpSpr.setTexture(tex);
-    tmpSpr.setPosition({ 400.f, 400.f });
-    tmpSpr.setTextureRect({ {0,0},{84,84} });
+    tmpSpr.setPosition(playerFSM.posx, playerFSM.posy);
+    tmpSpr.setTextureRect(currFrame);
 
 
 

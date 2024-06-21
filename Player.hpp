@@ -9,6 +9,26 @@
 #include "FSM.hpp"
 #include <iostream>
 #include <optional>
+
+enum class PlayerAnim : int
+{
+    IdleRight = 0,
+    ShootingRight = 1,
+    RunningRight = 2,
+    RunningAndShootingRight = 3,
+    InAirRight = 4,
+    InAirShootingRight = 5,
+    IdleLeft = 6,
+    ShootingLeft = 7,
+    RunningLeft = 8,
+    RunningAndShootingLeft = 9,
+    InAirLeft = 10,
+    InAirShootingLeft = 11
+
+};
+
+
+
 struct PlayerTransitions
 {
 
@@ -49,12 +69,93 @@ class Sprite;
 using Player_FSM = FSM<PlayerStateVar, EventVar, PlayerTransitions>;
 
 class Player {
+public:
     sf::Texture tex;
+    sf::IntRect currFrame;
+    std::map<PlayerAnim, std::vector<sf::IntRect> > animMap = {
+        {
+            PlayerAnim::IdleRight, std::vector<sf::IntRect> {
+            {{4 * 84,0},{84,84}}
+           }
+        },
+        {
+            PlayerAnim::ShootingRight,  std::vector<sf::IntRect> {
+                {{5 * 84,0},{84,84}}
+            }
+        },
+        {
+            PlayerAnim::RunningRight, std::vector<sf::IntRect> {
+                 {{0,0},{84,84}},
+                 {{1 * 84,0},{84,84}},
+                 {{2 * 84,0},{84,84}},
+                 {{3 * 84,0},{84,84}},
+
+            }
+        },
+        {
+            PlayerAnim::RunningAndShootingRight, std::vector<sf::IntRect> {
+                 {{0,84},{84,84}},
+                 {{1 * 84,84},{84,84}},
+                 {{2 * 84,84},{84,84}},
+                 {{3 * 84,84},{84,84}},
+
+            }
+        },
+        {
+            PlayerAnim::InAirRight, std::vector<sf::IntRect> {
+            {{5 * 84,84},{84,84}}
+           }
+        },
+        {
+            PlayerAnim::InAirShootingRight,  std::vector<sf::IntRect> {
+                {{4 * 84,84},{84,84}}
+            }
+        },
+        {
+            PlayerAnim::IdleLeft, std::vector<sf::IntRect> {
+            {{4 * 84,168},{84,84}}
+           }
+        },
+        {
+            PlayerAnim::ShootingLeft,  std::vector<sf::IntRect> {
+                {{5 * 84,168},{84,84}}
+            }
+        },
+        {
+            PlayerAnim::RunningLeft, std::vector<sf::IntRect> {
+                 {{0,168},{84,84}},
+                 {{1 * 84,168},{84,84}},
+                 {{2 * 84,168},{84,84}},
+                 {{3 * 84,168},{84,84}},
+
+            }
+        },
+        {
+            PlayerAnim::RunningAndShootingLeft, std::vector<sf::IntRect> {
+                 {{0,252},{84,84}},
+                 {{1 * 84,252},{84,84}},
+                 {{2 * 84,252},{84,84}},
+                 {{3 * 84,252},{84,84}},
+
+            }
+        },
+        {
+            PlayerAnim::InAirLeft, std::vector<sf::IntRect> {
+            {{5 * 84,252},{84,84}}
+           }
+        },
+        {
+            PlayerAnim::InAirShootingLeft,  std::vector<sf::IntRect> {
+                {{4 * 84,252},{84,84}}
+            }
+        }
+    };
     
 public:
     Player();
 
     Player_FSM playerFSM;
+
 
     void update(const sf::Time& l_dt);
         // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur

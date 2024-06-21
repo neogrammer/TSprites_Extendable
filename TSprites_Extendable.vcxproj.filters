@@ -159,4 +159,9 @@
       <Filter>Header Files\state_machines</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\player_atlas84x84.png">
+      <Filter>Resource Files\assets\textures</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

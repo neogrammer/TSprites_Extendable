@@ -5,6 +5,7 @@ template <typename StateVariant, typename EventVariant, typename Transitions>
 class FSM {
 	StateVariant state_;
 
+
 public:
 	float posx{ 40.f }, posy{ 100.f }, velx{ 0.f }, vely{ 0.f };
 	float width{ 84.f }, height{ 84.f }, jumpHeight{ 0.f }, jumpHeightMax{ 300.f };
