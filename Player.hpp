@@ -7,22 +7,34 @@
 #include "PlayerStates.hpp"
 #include "Events.hpp"
 #include "FSM.hpp"
+#include <iostream>
 #include <optional>
 struct PlayerTransitions
 {
 
-    std::optional<PlayerStateVar> operator()(states_player::Idle&, const JumpEvent& e) const
+
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const JumpEvent& e)
     {
-        return states_player::Rising{ 1000 };
+        return states_player::Rising{ };
     }
-    std::optional<PlayerStateVar> operator()(states_player::Rising&, const ReachedJumpPeakEvent& e) const
+
+    std::optional<PlayerStateVar> operator()(states_player::Rising&, const ReachedJumpPeakEvent& e)
     {
-        return states_player::Falling{ 10 };
+      
+        return states_player::Falling{};
+        ///  (--jumpHeightCurrent < Rising::JumpHeightMax)
     }
-    std::optional<PlayerStateVar> operator()(states_player::Falling&, const LandedEvent& e) const
+   
+    
+
+
+    std::optional<PlayerStateVar> operator()(states_player::Falling&, const LandedEvent& e)
     {
+ 
         return states_player::Idle{ };
     }
+
+   
 
     // default
     template<typename State, typename Event>

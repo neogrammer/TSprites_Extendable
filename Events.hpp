@@ -1,9 +1,10 @@
 #pragma once
 #include <variant>
-struct JumpEvent { 	int jump = 0;  };
-struct ReachedJumpPeakEvent { int gravity = 0; };
+struct JumpEvent { 	int maxJumpHeigt;  };
+struct ReachedJumpPeakEvent { };
 struct LandedEvent {};
 
-struct FillerEvent {};
+struct UpdateEvent { float l_dt; };  // special event that allows timed events to trigger themselves
 
-using EventVar = std::variant<JumpEvent, ReachedJumpPeakEvent, LandedEvent>;
+
+using EventVar = std::variant<JumpEvent, ReachedJumpPeakEvent, LandedEvent, UpdateEvent>;

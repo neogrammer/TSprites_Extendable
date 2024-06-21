@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "Sprite.hpp"
 
+
 Player::Player()
     : tex{}
     , playerFSM{}
@@ -10,7 +11,8 @@ Player::Player()
         std::cout << "Unable to load texture" << std::endl;
     }
 
-    dispatch(playerFSM, JumpEvent{ 1000 }, ReachedJumpPeakEvent{ 10 }, LandedEvent{} );
+    playerFSM.gravity = 1.f;
+    dispatch(playerFSM, JumpEvent{ 1000 });
 
    
     
@@ -20,12 +22,37 @@ Player::Player()
 
 
 void Player::update(const sf::Time& l_dt) {
+
+    playerFSM.dt = l_dt.asSeconds();
+   
+
+
+
+    if (playerFSM.isType(states_player::Rising{}))
+    {
+        playerFSM.jumpHeight += playerFSM.gravity;
+        playerFSM.vely -= playerFSM.jumpHeight * l_dt.asSeconds();
+        playerFSM.posy += playerFSM.vely;
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        std::cout << playerFSM.jumpHeight << ", " << std::endl;
+        if (playerFSM.jumpHeight > playerFSM.jumpHeightMax)
+        {
+            std::cout << "Reached peak of jump" << std::endl;
+
+            dispatch(playerFSM, ReachedJumpPeakEvent{});
+
+        }
+    }
+    else {
+
+    }
     // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur
     // dispatch(fsm, eventBuffer[0], 1, 2, 3 ..);  <- this updates the sprite data via the transitions passed in when creating the fsm
     // spr.setPosition(this->getPosition())
     // 
     //  ONLY SETTING THE POSITION FOR COLLISION DETECTION TO BE ABLE TO TEST ITS CURRENT POSITION, animation not neccesary .. YET...
-
+   
 
     // after this is called on all sprites, collision detection checks and may put an event into this sprites input buffer to be handled
     //   , a few maybe, as the collision detection system knows a couple events itsef which goes right into this buffer
