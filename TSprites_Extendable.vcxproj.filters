@@ -37,14 +37,8 @@
     <Filter Include="Header Files\util">
       <UniqueIdentifier>{1f381477-a994-4a82-b424-3c8ff52ab395}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\game_states\stage">
-      <UniqueIdentifier>{1681a3dd-ce80-47f8-8899-08aa3b6e8f30}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\game_state">
       <UniqueIdentifier>{96a40802-52c3-4175-8881-74104886c9e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\game_state\stage">
-      <UniqueIdentifier>{79e0bcfd-db1f-446c-bc80-2570775570f4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\assets">
       <UniqueIdentifier>{cf4c1274-b53e-450f-82ee-38c80d4c2ef2}</UniqueIdentifier>
@@ -54,6 +48,18 @@
     </Filter>
     <Filter Include="Source Files\sprites">
       <UniqueIdentifier>{446f5366-37d5-4c26-8c33-dc6ec1789e07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\state_machines">
+      <UniqueIdentifier>{034cd46d-a5e9-40ea-8363-cf5ac3e7b1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\state_machines">
+      <UniqueIdentifier>{854e8040-03b9-4522-be79-ec53fcada528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\stage">
+      <UniqueIdentifier>{79e0bcfd-db1f-446c-bc80-2570775570f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stage">
+      <UniqueIdentifier>{1681a3dd-ce80-47f8-8899-08aa3b6e8f30}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,19 +88,19 @@
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
-      <Filter>Source Files\game_states\stage</Filter>
+      <Filter>Source Files\stage</Filter>
     </ClCompile>
     <ClCompile Include="StageMgr.cpp">
       <Filter>Source Files\mgrs</Filter>
     </ClCompile>
     <ClCompile Include="IntroStage.cpp">
-      <Filter>Source Files\game_states\stage</Filter>
+      <Filter>Source Files\stage</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\sprites</Filter>
     </ClCompile>
     <ClCompile Include="StageSandbox.cpp">
-      <Filter>Source Files\game_states\stage</Filter>
+      <Filter>Source Files\stage</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Source Files\sprites</Filter>
@@ -132,16 +138,25 @@
       <Filter>Header Files\util</Filter>
     </ClInclude>
     <ClInclude Include="Stage.hpp">
-      <Filter>Header Files\game_state\stage</Filter>
+      <Filter>Header Files\stage</Filter>
     </ClInclude>
     <ClInclude Include="StageMgr.hpp">
       <Filter>Header Files\core\mgrs</Filter>
     </ClInclude>
     <ClInclude Include="IntroStage.hpp">
-      <Filter>Header Files\game_state\stage</Filter>
+      <Filter>Header Files\stage</Filter>
     </ClInclude>
     <ClInclude Include="StageSandbox.hpp">
-      <Filter>Header Files\game_state\stage</Filter>
+      <Filter>Header Files\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStates.hpp">
+      <Filter>Header Files\state_machines</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.hpp">
+      <Filter>Header Files\state_machines</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.hpp">
+      <Filter>Header Files\state_machines</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

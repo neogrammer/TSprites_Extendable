@@ -159,9 +159,12 @@
   <ItemGroup>
     <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="Events.hpp" />
+    <ClInclude Include="FSM.hpp" />
     <ClInclude Include="GameState.hpp" />
     <ClInclude Include="IntroStage.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="PlayerStates.hpp" />
     <ClInclude Include="SandboxState.hpp" />
     <ClInclude Include="SplashState.hpp" />
     <ClInclude Include="Sprite.hpp" />

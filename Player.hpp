@@ -4,13 +4,45 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "PlayerStates.hpp"
+#include "Events.hpp"
+#include "FSM.hpp"
+#include <optional>
+struct PlayerTransitions
+{
+
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const JumpEvent& e) const
+    {
+        return states_player::Rising{ 1000 };
+    }
+    std::optional<PlayerStateVar> operator()(states_player::Rising&, const ReachedJumpPeakEvent& e) const
+    {
+        return states_player::Falling{ 10 };
+    }
+    std::optional<PlayerStateVar> operator()(states_player::Falling&, const LandedEvent& e) const
+    {
+        return states_player::Idle{ };
+    }
+
+    // default
+    template<typename State, typename Event>
+    std::optional<PlayerStateVar> operator()(State&, const Event&) const
+    { return std::nullopt; }
+
+};
+
+
+
 class Sprite;
+using Player_FSM = FSM<PlayerStateVar, EventVar, PlayerTransitions>;
+
 class Player {
     sf::Texture tex;
+    
 public:
     Player();
 
-
+    Player_FSM playerFSM;
 
     void update(const sf::Time& l_dt);
         // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur

@@ -3,11 +3,18 @@
 
 Player::Player()
     : tex{}
+    , playerFSM{}
 {
     if (!tex.loadFromFile("assets/textures/player_atlas84x84.png"))
     {
         std::cout << "Unable to load texture" << std::endl;
     }
+
+    dispatch(playerFSM, JumpEvent{ 1000 }, ReachedJumpPeakEvent{ 10 }, LandedEvent{} );
+
+   
+    
+
 }
 
 
