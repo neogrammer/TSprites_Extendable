@@ -67,7 +67,25 @@ void Player::update(const sf::Time& l_dt) {
             playerFSM.vely = 1.f;
 
             dispatch(playerFSM, ReachedJumpPeakEvent{});
+        }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            playerFSM.velx = -240.f;
+            playerFSM.facingRight = false;
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+            dispatch(playerFSM, BeganMovingLeftEvent{});
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 240.f;
+            playerFSM.facingRight = true;
+            currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            dispatch(playerFSM, BeganMovingRightEvent{});
+        }
+        else
+        {
+            playerFSM.velx = 0.f;
         }
     }
     else if (playerFSM.isType(states_player::Falling{}))
@@ -99,6 +117,25 @@ void Player::update(const sf::Time& l_dt) {
             dispatch(playerFSM, LandedEvent{});
 
 
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            playerFSM.velx = -240.f;
+            playerFSM.facingRight = false;
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+            dispatch(playerFSM, BeganMovingLeftEvent{});
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 240.f;
+            playerFSM.facingRight = true;
+            currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            dispatch(playerFSM, BeganMovingRightEvent{});
+        }
+        else
+        {
+            playerFSM.velx = 0.f;
         }
 
     }
@@ -147,6 +184,7 @@ void Player::update(const sf::Time& l_dt) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
                 currFrame = animMap[PlayerAnim::IdleRight].at(0);
+                playerFSM.facingRight = true;
 
             }
             else
@@ -155,9 +193,22 @@ void Player::update(const sf::Time& l_dt) {
             }
             dispatch(playerFSM, StoppedMovingLeftEvent{});
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            playerFSM.vely = -1000.f;
+            playerFSM.jumpHeight = 0;
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+
+            //currAnim = PlayerAnim::IdleRight;
+            dispatch(playerFSM, JumpEvent{ 1000 });
+        }
+
+
     }
-    else if (playerFSM.isType(states_player::RisingAndMovingLeft{})) {}
-    else if (playerFSM.isType(states_player::FallingAndMovingLeft{})) {}
     else if (playerFSM.isType(states_player::MovingRight{}))
     {
         playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
@@ -169,6 +220,7 @@ void Player::update(const sf::Time& l_dt) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             {
                 currFrame = animMap[PlayerAnim::IdleLeft].at(0);
+                playerFSM.facingRight = false;
 
             }
             else
@@ -177,9 +229,158 @@ void Player::update(const sf::Time& l_dt) {
             }
             dispatch(playerFSM, StoppedMovingRightEvent{});
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            playerFSM.vely = -1000.f;
+            playerFSM.jumpHeight = 0;
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+
+            //currAnim = PlayerAnim::IdleRight;
+            dispatch(playerFSM, JumpEvent{ 1000 });
+        }
+
     }
-    else if (playerFSM.isType(states_player::FallingAndMovingRight{})){}
-    else if (playerFSM.isType(states_player::FallingAndMovingRight{})){}
+    else if (playerFSM.isType(states_player::RisingAndMovingLeft{})) 
+    {
+        // Implement this next
+        playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
+        playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        std::cout << playerFSM.vely << ", " << std::endl;
+        if (abs(playerFSM.vely) < 50.f)
+        {
+            std::cout << "Reached peak of jump" << std::endl;
+            std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+            std::cout << "PlayerFSM.vely at top of jump = " << playerFSM.vely << std::endl;
+
+            //playerFSM.vely = 10.f;
+            playerFSM.vely = 1.f;
+
+            dispatch(playerFSM, ReachedJumpPeakEvent{});
+        }
+
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 0.f;
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+            dispatch(playerFSM, StoppedMovingLeftEvent{});
+            
+        }
+
+    }
+    else if (playerFSM.isType(states_player::RisingAndMovingRight{}))
+    {
+        // Implement this next
+        playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
+        playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        std::cout << playerFSM.vely << ", " << std::endl;
+        if (abs(playerFSM.vely) < 50.f)
+        {
+            std::cout << "Reached peak of jump" << std::endl;
+            std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+            std::cout << "PlayerFSM.vely at top of jump = " << playerFSM.vely << std::endl;
+
+            //playerFSM.vely = 10.f;
+            playerFSM.vely = 1.f;
+
+            dispatch(playerFSM, ReachedJumpPeakEvent{});
+        }
+
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            playerFSM.velx = 0.f;
+            currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            dispatch(playerFSM, StoppedMovingRightEvent{});
+
+        }
+
+        }
+    else if (playerFSM.isType(states_player::FallingAndMovingLeft{})) 
+    {
+
+        // Implement this next
+        playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
+        playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        if (playerFSM.posy + playerFSM.height > playerFSM.maxY)
+        {
+            playerFSM.posy = playerFSM.maxY - playerFSM.height;
+            std::cout << "Landed" << std::endl;
+
+            std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+            std::cout << "PlayerFSM.vely = " << playerFSM.vely << std::endl;
+            // std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+
+
+
+            playerFSM.vely = 0.f;
+            playerFSM.jumpHeight = 0;
+
+            currFrame = animMap[PlayerAnim::RunningLeft].at(0);
+
+            //currAnim = PlayerAnim::IdleRight;
+            dispatch(playerFSM, LandedEvent{});
+
+
+
+        }
+
+        if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            playerFSM.velx = 0.f;
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+            dispatch(playerFSM, StoppedMovingLeftEvent{});
+        }
+        
+    }
+   
+    else if (playerFSM.isType(states_player::FallingAndMovingRight{}))
+    {
+    // Implement
+      // Implement this next
+      playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
+      playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
+      playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+      if (playerFSM.posy + playerFSM.height > playerFSM.maxY)
+      {
+          playerFSM.posy = playerFSM.maxY - playerFSM.height;
+          std::cout << "Landed" << std::endl;
+
+          std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+          std::cout << "PlayerFSM.vely = " << playerFSM.vely << std::endl;
+          // std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
+
+
+
+          playerFSM.vely = 0.f;
+          playerFSM.jumpHeight = 0;
+
+          currFrame = animMap[PlayerAnim::RunningRight].at(0);
+
+          //currAnim = PlayerAnim::IdleRight;
+          dispatch(playerFSM, LandedEvent{});
+
+
+      }
+
+      if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+          playerFSM.velx = 0.f;
+          currFrame = animMap[PlayerAnim::InAirRight].at(0);
+          dispatch(playerFSM, StoppedMovingRightEvent{});
+      }
+
+    }
+
     else if (playerFSM.isType(states_player::Shooting{})){}
     else if (playerFSM.isType(states_player::MovingLeftAndShooting{})){ }
     else if (playerFSM.isType(states_player::MovingRightAndShooting{})) { }    
