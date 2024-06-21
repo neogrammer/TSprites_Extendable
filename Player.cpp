@@ -13,10 +13,11 @@ Player::Player()
         std::cout << "Unable to load texture" << std::endl;
     }
 
-    playerFSM.gravity = 2.f;
+    playerFSM.gravity = 1200.f;
+    playerFSM.vely = -1000.f;
     dispatch(playerFSM, JumpEvent{ 1000 });
 
-    playerFSM.posy = 200.f;
+    playerFSM.posy = 500.f;
     std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
 
     currFrame = animMap[PlayerAnim::InAirRight].at(0);
@@ -38,17 +39,20 @@ void Player::update(const sf::Time& l_dt) {
 
     if (playerFSM.isType(states_player::Rising{}))
     {
-        playerFSM.jumpHeight += playerFSM.gravity;
-        playerFSM.vely -= playerFSM.jumpHeight;
-        playerFSM.posy += (playerFSM.vely * ( 1 - (playerFSM.jumpHeight / playerFSM.jumpHeightMax))) * l_dt.asSeconds();
+       
+        playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
+        playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
         playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
 
-        std::cout << playerFSM.jumpHeight << ", " << std::endl;
-        if (playerFSM.jumpHeight > playerFSM.jumpHeightMax)
+        std::cout << playerFSM.vely << ", " << std::endl;
+        if (abs(playerFSM.vely) < 50.f)
         {
             std::cout << "Reached peak of jump" << std::endl;
             std::cout << "PlayerFSM.posy = " << playerFSM.posy << std::endl;
-            playerFSM.vely = 10.f;
+            std::cout << "PlayerFSM.vely at top of jump = " << playerFSM.vely << std::endl;
+
+            //playerFSM.vely = 10.f;
+            playerFSM.vely = 1.f;
 
             dispatch(playerFSM, ReachedJumpPeakEvent{});
 
@@ -56,10 +60,9 @@ void Player::update(const sf::Time& l_dt) {
     }
     else if (playerFSM.isType(states_player::Falling{}))
     {
-        if (playerFSM.vely == 0.f)
-            playerFSM.vely = 10.f;
-        playerFSM.vely *= playerFSM.vely;
+        playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
         playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
+        playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
 
         if (playerFSM.posy + playerFSM.height > playerFSM.maxY)
         {
@@ -86,12 +89,14 @@ void Player::update(const sf::Time& l_dt) {
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
+            playerFSM.vely = -1000.f;
             playerFSM.jumpHeight = 0;
             currFrame = animMap[PlayerAnim::InAirRight].at(0);
             //currAnim = PlayerAnim::IdleRight;
                 dispatch(playerFSM, JumpEvent{1000});
         }
     }
+   
     // players logic, handled in the fsm, state stored in this class, updates via the fsm and transitions when they occur
     // dispatch(fsm, eventBuffer[0], 1, 2, 3 ..);  <- this updates the sprite data via the transitions passed in when creating the fsm
     // spr.setPosition(this->getPosition())
