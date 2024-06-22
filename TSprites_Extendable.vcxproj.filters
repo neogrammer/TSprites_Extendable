@@ -82,6 +82,12 @@
     <Filter Include="Resource Files\assets\configurations\tilemaps">
       <UniqueIdentifier>{c27696ca-8045-41b9-a852-add7c617a82e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\assets\textures\projectiles">
+      <UniqueIdentifier>{79006193-024d-49b3-8504-e512efad2a17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assets\textures\projectiles\bullets">
+      <UniqueIdentifier>{f142daa9-da58-46bb-a1ec-bae26152ecf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -219,6 +225,12 @@
     </Image>
     <Image Include="assets\textures\tilesets\intro\Tilesheet0.png">
       <Filter>Resource Files\assets\textures\tilesets\intro</Filter>
+    </Image>
+    <Image Include="assets\textures\projectiles\bullets\fire03.png">
+      <Filter>Resource Files\assets\textures\projectiles\bullets</Filter>
+    </Image>
+    <Image Include="assets\textures\water.png">
+      <Filter>Resource Files\assets\textures</Filter>
     </Image>
   </ItemGroup>
 </Project>

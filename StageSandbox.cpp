@@ -2,12 +2,14 @@
 #include "sprites.hpp"
 #include "StageMgr.hpp"
 #include "util.hpp"
+#include <algorithm>
 #include <iostream>
 
 
 // Intro Stage
 StageSandbox::StageSandbox(StageMgr& l_mgr)
 	: Stage{ l_mgr }
+	, bulletTex{}
 	, bgTexVec{}
 	, tmap("assets/configurations/tilemaps/Tilemap1.dat")
 {
@@ -25,11 +27,12 @@ StageSandbox::StageSandbox(StageMgr& l_mgr)
 	bgTexVec.emplace_back(sf::Texture{});
 	bgTexVec.back().loadFromFile("assets/textures/background1/5.png");
 
+	bulletTex.loadFromFile("assets/textures/projectiles/bullets/fire03.png");
+	
 
-
-	sprites_.emplace_back(Player{});
-	sprites_.emplace_back(Enemy{});
-	sprites_.emplace_back(Bullet{});
+	sprites_.emplace_back(Player{playerPosx, playerPosy, playerIsAlive});
+	sprites_.emplace_back(Enemy{enemyPosx, enemyPosy, enemyIsAlive});
+	//sprites_.emplace_back(Bullet{bulletPosx, bulletPosy, bulletIsAlive, bulletTex });
 
 	//backgroundTex.loadFromFile("");
 	//sfBgSpr.setTexture(backgroundTex);
@@ -53,6 +56,25 @@ void StageSandbox::update(const sf::Time& l_dt)
 
 
 	updateAllSprites(sprites_, l_dt);
+	if (!justShot) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			justShot = true;
+			shootTime = sf::Time::Zero;
+			sprites_.emplace_back(Bullet{ playerPosx+60, playerPosy - 35.f, bulletIsAlive, bulletTex });
+			
+
+		}
+	}
+	
+	shootTime += l_dt;
+
+	if (shootTime >= sf::seconds(shootDelay))
+	{
+		justShot = false;
+	}
+		
+
 	return;
 
 	// run collision checks

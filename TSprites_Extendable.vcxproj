@@ -188,7 +188,9 @@
     <Image Include="assets\textures\background1\5.png" />
     <Image Include="assets\textures\PlantAtlas96x136.png" />
     <Image Include="assets\textures\player_atlas84x84.png" />
+    <Image Include="assets\textures\projectiles\bullets\fire03.png" />
     <Image Include="assets\textures\tilesets\intro\Tilesheet0.png" />
+    <Image Include="assets\textures\water.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

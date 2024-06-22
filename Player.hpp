@@ -168,6 +168,8 @@ using Player_FSM = FSM<PlayerStateVar, EventVar, PlayerTransitions>;
 
 class Player {
 public:
+
+    bool& baseIsAlive;
     sf::Clock animTimer{};
     float animDelay{ 0.f };
     sf::Texture tex;
@@ -253,7 +255,7 @@ public:
     };
     
 public:
-    Player();
+    Player(float l_posx, float l_posy, bool& l_isAlive);
 
     Player_FSM playerFSM;
 
@@ -261,13 +263,14 @@ public:
     // as you are aware the correct state the user is in, and can code for that specific state logic, while being able to
     // change the state correctly by dispathing events to the playerFSM
     void update(const sf::Time& l_dt);
+    bool isAlive();
     void render(sf::RenderWindow& l_wnd); 
     void finalize();
 
 };
 
 void update(Player& player, const sf::Time& deltaTime);
-
+bool isAlive(Player& player);
 void render(Player& player, sf::RenderWindow& window);
 
 

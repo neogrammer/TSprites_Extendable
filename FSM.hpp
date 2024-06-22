@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <variant>
+#include <optional>
 
 template <typename StateVariant, typename EventVariant, typename Transitions>
 class FSM {

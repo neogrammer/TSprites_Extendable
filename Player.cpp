@@ -2,12 +2,13 @@
 #include "Sprite.hpp"
 
 
-Player::Player()
-    : tex{}
+Player::Player(float l_posx, float l_posy, bool& l_isAlive)
+    :  tex{}
     , playerFSM{}
     //, currAnim{PlayerAnim::IdleRight}
     , currFrame{}
-{
+    , baseIsAlive{l_isAlive}
+  {
     if (!tex.loadFromFile("assets/textures/player_atlas84x84.png"))
     {
         std::cout << "Unable to load texture" << std::endl;
@@ -31,6 +32,7 @@ Player::Player()
     }
     //this->currAnim = PlayerAnim::InAirRight;
 
+   
 }
 
 
@@ -489,6 +491,11 @@ void Player::update(const sf::Time& l_dt) {
       
 }
 
+bool Player::isAlive()
+{
+    return baseIsAlive;
+}
+
 void Player::render(sf::RenderWindow& l_wnd) {
 
 
@@ -509,6 +516,11 @@ void Player::finalize()
 
 void update(Player& player, const sf::Time& deltaTime) {
     player.update(deltaTime);
+}
+
+bool isAlive(Player& player)
+{
+    return player.isAlive();
 }
 
 void render(Player& player, sf::RenderWindow& window) {

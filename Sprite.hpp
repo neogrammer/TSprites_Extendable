@@ -13,13 +13,14 @@ class Sprite
 		virtual ~SpriteConcept() = default;
 		virtual void do_update(const sf::Time& l_dt) = 0;
 		virtual void do_render(sf::RenderWindow& l_wnd) = 0;
+		virtual bool do_isAlive() = 0;
 		virtual std::unique_ptr<SpriteConcept> clone() const = 0;
 	};
 
 	template <typename SpriteT>
 	struct SpriteModel : SpriteConcept
 	{
-
+		
 
 		SpriteModel(SpriteT l_sprite)
 			: sprite_{ std::move(l_sprite) }
@@ -28,7 +29,15 @@ class Sprite
 		void do_update(const sf::Time& l_dt) override
 		{
 			update(sprite_, l_dt);
+			
 		}
+
+		bool do_isAlive() override
+		{
+			return isAlive(sprite_);
+		}
+
+		
 
 		void do_render(sf::RenderWindow& l_wnd) override
 		{
@@ -56,6 +65,10 @@ class Sprite
 		{
 			updater_(sprite_, l_dt);
 		}
+		bool do_isAlive() override
+		{
+			return isAlive(sprite_);
+		}
 
 		void do_render(sf::RenderWindow& l_wnd) override
 		{
@@ -77,6 +90,11 @@ class Sprite
 		sprite.pimpl->do_update(l_dt);
 	}
 
+	friend bool isAlive(const Sprite* sprite)
+	{
+		return sprite->pimpl->do_isAlive();
+	}
+
 	friend void render(const Sprite& sprite, sf::RenderWindow& l_wnd)
 	{
 		sprite.pimpl->do_render(l_wnd);
@@ -85,8 +103,6 @@ class Sprite
 	std::unique_ptr<SpriteConcept> pimpl;
 public:
 	//   Here is where the templated fsm should live
-	
-
 
 
 	template <typename SpriteT>
@@ -95,6 +111,8 @@ public:
 	{}
 
 	
+	
+
 	//   template <typename SpriteT, typename DerivedFSM, typename StateVariant, typename Transitions>
 	//  using playerFsm = fsm<PlayerStateVar, PlayerEvent>
 	//  : pimpl{std::make_unique<fsm<DerivedFSM>(l_stateVar
@@ -107,6 +125,9 @@ public:
 		o.pimpl->clone().swap(pimpl);
 		return (*this);
 	}
+
+
+
 
 	//Sprite(Sprite&&);  undefined on purpose
 	// preventing move from making nullptrs

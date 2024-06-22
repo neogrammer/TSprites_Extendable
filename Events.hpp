@@ -10,7 +10,9 @@ struct StoppedMovingRightEvent {};
 struct BeganShootingEvent {};
 struct StoppedShootingEvent {};
 struct UpdateEvent { float l_dt; };  // special event that allows timed events to trigger themselves
+struct CollidedEvent {};
+struct OffStageEvent {};
 
 
 using EventVar = std::variant<JumpEvent, ReachedJumpPeakEvent, LandedEvent, UpdateEvent, BeganMovingLeftEvent, StoppedMovingLeftEvent
-, BeganMovingRightEvent, StoppedMovingRightEvent, BeganShootingEvent, StoppedShootingEvent>;
+, BeganMovingRightEvent, StoppedMovingRightEvent, BeganShootingEvent, StoppedShootingEvent, CollidedEvent, OffStageEvent>;

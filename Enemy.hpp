@@ -8,18 +8,22 @@
 class Sprite;
 
 class Enemy {
+
+public:
+
+    bool& baseIsAlive;
     float posx = 0.f, posy = 0.f;
 public:
-    Enemy();
+    Enemy(float l_posx, float l_posy, bool& l_isAlive );
     void update(const sf::Time& l_dt); 
-
+    bool isAlive();
     void render(sf::RenderWindow& l_wnd);
 
     void finalize();
 };
 
-void update(Enemy& player, const sf::Time& deltaTime);
-
-void render(Enemy& player, sf::RenderWindow& window);
+void update(Enemy& enemy, const sf::Time& deltaTime);
+bool isAlive(Enemy& enemy);
+void render(Enemy& enemy, sf::RenderWindow& window);
 
 #endif
