@@ -129,6 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalBMIDirectories>C:\Users\jlhar\source\repos\TSprites_Extendable\modules\map_mod;%(AdditionalBMIDirectories)</AdditionalBMIDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="assets\configurations\tilemaps\Tilemap1.dat" />
     <None Include="GameStateMgr.hpp" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -148,6 +150,10 @@
     <ClCompile Include="GameStateMgr.cpp" />
     <ClCompile Include="IntroStage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="modules\map_mod\map_module-Tile.ixx" />
+    <ClCompile Include="modules\map_mod\map_module-Tilemap.ixx" />
+    <ClCompile Include="modules\map_mod\map_module-Tilesheet.ixx" />
+    <ClCompile Include="modules\map_mod\map_module.ixx" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="sandbox_state.cpp" />
     <ClCompile Include="SplashState.cpp" />
@@ -175,7 +181,14 @@
     <ClInclude Include="util.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\textures\background1\1.png" />
+    <Image Include="assets\textures\background1\2.png" />
+    <Image Include="assets\textures\background1\3.png" />
+    <Image Include="assets\textures\background1\4.png" />
+    <Image Include="assets\textures\background1\5.png" />
+    <Image Include="assets\textures\PlantAtlas96x136.png" />
     <Image Include="assets\textures\player_atlas84x84.png" />
+    <Image Include="assets\textures\tilesets\intro\Tilesheet0.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

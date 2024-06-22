@@ -9,7 +9,7 @@ class FSM {
 public:
 	float posx{ 40.f }, posy{ 100.f }, velx{ 0.f }, vely{ 0.f };
 	float width{ 84.f }, height{ 84.f }, jumpHeight{ 0.f }, jumpHeightMax{ 300.f };
-	float maxY{ 500.f }, gravity{ 0.0f }, maxGravity{ 980.f };
+	float maxY{ 513.f }, gravity{ 0.0f }, maxGravity{ 980.f };
 	float runSpd{ 2.6f }, maxRunSpd{ 200.f };
 	float dt{ 0.f };
 	bool facingRight{ true };
