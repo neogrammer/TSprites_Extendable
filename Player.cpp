@@ -45,12 +45,17 @@ void Player::update(const sf::Time& l_dt) {
 
     //playerFSM.velx = 0.f;
    // playerFSM.vely = 0.f;
-   
+    int currAnimIndex = 0;
 
 
+    
+    std::unique_ptr<PlayerAnim> wasAnimChange = nullptr;
 
     if (playerFSM.isType(states_player::Rising{}))
     {
+        
+
+        
        
         playerFSM.vely += playerFSM.gravity * l_dt.asSeconds();
         playerFSM.posy += playerFSM.vely * l_dt.asSeconds();
@@ -85,6 +90,10 @@ void Player::update(const sf::Time& l_dt) {
         }
         else
         {
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::InAirLeft].at(0);
             playerFSM.velx = 0.f;
         }
     }
@@ -135,6 +144,12 @@ void Player::update(const sf::Time& l_dt) {
         }
         else
         {
+
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::InAirRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+
             playerFSM.velx = 0.f;
         }
 
@@ -158,6 +173,10 @@ void Player::update(const sf::Time& l_dt) {
         {
             playerFSM.velx = -240.f;
             playerFSM.facingRight = false;
+            playerFSM.currAnimFrameCount = 4;
+            playerFSM.currAnimFrameIndex = 0;
+            animTimer.restart();
+            animDelay = 0.14f;
             currFrame = animMap[PlayerAnim::RunningLeft].at(0);
             dispatch(playerFSM, BeganMovingLeftEvent{});
         }
@@ -165,11 +184,20 @@ void Player::update(const sf::Time& l_dt) {
         {
             playerFSM.velx = 240.f;
             playerFSM.facingRight = true;
+            playerFSM.currAnimFrameCount = 4;
+            playerFSM.currAnimFrameIndex = 0;
+            animTimer.restart();
+            animDelay = 0.14f;
             currFrame = animMap[PlayerAnim::RunningRight].at(0);
             dispatch(playerFSM, BeganMovingRightEvent{});
         }
         else
         {
+            if (playerFSM.facingRight)
+                currFrame = animMap[PlayerAnim::IdleRight].at(0);
+            else
+                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
+
             playerFSM.velx = 0.f;
         }
     }
@@ -177,18 +205,39 @@ void Player::update(const sf::Time& l_dt) {
     {
         playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
 
+        PlayerAnim* currAnim;
+        if (playerFSM.facingRight)
+            currAnim = new PlayerAnim(PlayerAnim::RunningRight);
+        else
+            currAnim = new PlayerAnim(PlayerAnim::RunningLeft);
+
+        wasAnimChange = std::make_unique<PlayerAnim>(*(PlayerAnim*)std::move(currAnim));
+        // animate the player
+        if (animTimer.getElapsedTime().asSeconds() > animDelay)
+        {
+            animTimer.restart();
+            if (++playerFSM.currAnimFrameIndex >= playerFSM.currAnimFrameCount)
+            {
+                playerFSM.currAnimFrameIndex = 0;
+            }
+
+
+            currAnimIndex = playerFSM.currAnimFrameIndex;
+        }
         if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             playerFSM.velx = 0.f;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
-                currFrame = animMap[PlayerAnim::IdleRight].at(0);
                 playerFSM.facingRight = true;
+                currAnimIndex = 0;
+                currFrame = animMap[PlayerAnim::IdleRight].at(0);
 
             }
             else
             {
+                currAnimIndex = 0;
                 currFrame = animMap[PlayerAnim::IdleLeft].at(0);
             }
             dispatch(playerFSM, StoppedMovingLeftEvent{});
@@ -204,14 +253,36 @@ void Player::update(const sf::Time& l_dt) {
                 currFrame = animMap[PlayerAnim::InAirLeft].at(0);
 
             //currAnim = PlayerAnim::IdleRight;
+            currAnimIndex = 0;
             dispatch(playerFSM, JumpEvent{ 1000 });
         }
 
-
+        
+       
     }
     else if (playerFSM.isType(states_player::MovingRight{}))
     {
         playerFSM.posx += playerFSM.velx * l_dt.asSeconds();
+
+        PlayerAnim* currAnim;
+        if (playerFSM.facingRight)
+            currAnim = new PlayerAnim(PlayerAnim::RunningRight);
+        else
+            currAnim = new PlayerAnim(PlayerAnim::RunningLeft);
+
+        wasAnimChange = std::make_unique<PlayerAnim>(*(PlayerAnim*)std::move(currAnim));
+        // animate the player
+        if (animTimer.getElapsedTime().asSeconds() > animDelay)
+        {
+            animTimer.restart();
+            if (++playerFSM.currAnimFrameIndex >= playerFSM.currAnimFrameCount)
+            {
+                playerFSM.currAnimFrameIndex = 0;
+            }
+
+
+            currAnimIndex = playerFSM.currAnimFrameIndex;
+        }
 
         if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
@@ -219,12 +290,14 @@ void Player::update(const sf::Time& l_dt) {
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             {
-                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
                 playerFSM.facingRight = false;
+                currAnimIndex = 0;
+                currFrame = animMap[PlayerAnim::IdleLeft].at(0);
 
             }
             else
             {
+                currAnimIndex = 0;
                 currFrame = animMap[PlayerAnim::IdleRight].at(0);
             }
             dispatch(playerFSM, StoppedMovingRightEvent{});
@@ -240,9 +313,9 @@ void Player::update(const sf::Time& l_dt) {
                 currFrame = animMap[PlayerAnim::InAirLeft].at(0);
 
             //currAnim = PlayerAnim::IdleRight;
+            currAnimIndex = 0;
             dispatch(playerFSM, JumpEvent{ 1000 });
         }
-
     }
     else if (playerFSM.isType(states_player::RisingAndMovingLeft{})) 
     {
@@ -270,6 +343,10 @@ void Player::update(const sf::Time& l_dt) {
             currFrame = animMap[PlayerAnim::InAirLeft].at(0);
             dispatch(playerFSM, StoppedMovingLeftEvent{});
             
+        }
+        else
+        {
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
         }
 
     }
@@ -300,8 +377,11 @@ void Player::update(const sf::Time& l_dt) {
             dispatch(playerFSM, StoppedMovingRightEvent{});
 
         }
-
+        else
+        {
+            currFrame = animMap[PlayerAnim::InAirRight].at(0);
         }
+    }
     else if (playerFSM.isType(states_player::FallingAndMovingLeft{})) 
     {
 
@@ -323,13 +403,14 @@ void Player::update(const sf::Time& l_dt) {
 
             playerFSM.vely = 0.f;
             playerFSM.jumpHeight = 0;
-
+            playerFSM.currAnimFrameCount = 4;
+            playerFSM.currAnimFrameIndex = 0;
+            animTimer.restart();
+            animDelay = 0.14f;
             currFrame = animMap[PlayerAnim::RunningLeft].at(0);
 
             //currAnim = PlayerAnim::IdleRight;
             dispatch(playerFSM, LandedEvent{});
-
-
 
         }
 
@@ -339,7 +420,10 @@ void Player::update(const sf::Time& l_dt) {
             currFrame = animMap[PlayerAnim::InAirLeft].at(0);
             dispatch(playerFSM, StoppedMovingLeftEvent{});
         }
-        
+        else
+        {
+            currFrame = animMap[PlayerAnim::InAirLeft].at(0);
+        }
     }
    
     else if (playerFSM.isType(states_player::FallingAndMovingRight{}))
@@ -363,7 +447,10 @@ void Player::update(const sf::Time& l_dt) {
 
           playerFSM.vely = 0.f;
           playerFSM.jumpHeight = 0;
-
+          playerFSM.currAnimFrameCount = 4;
+          playerFSM.currAnimFrameIndex = 0;
+          animTimer.restart();
+          animDelay = 0.14f;
           currFrame = animMap[PlayerAnim::RunningRight].at(0);
 
           //currAnim = PlayerAnim::IdleRight;
@@ -378,6 +465,10 @@ void Player::update(const sf::Time& l_dt) {
           currFrame = animMap[PlayerAnim::InAirRight].at(0);
           dispatch(playerFSM, StoppedMovingRightEvent{});
       }
+      else
+      {
+          currFrame = animMap[PlayerAnim::InAirRight].at(0);
+      }
 
     }
 
@@ -391,7 +482,11 @@ void Player::update(const sf::Time& l_dt) {
     else if (playerFSM.isType(states_player::RisingAndMovingRightAndShooting{})) { }
     else if (playerFSM.isType(states_player::FallingAndMovingRightAndShooting{})) { }
    
-
+    if (wasAnimChange)
+    {
+        currFrame = animMap[*wasAnimChange].at(playerFSM.currAnimFrameIndex);
+    }
+      
 }
 
 void Player::render(sf::RenderWindow& l_wnd) {

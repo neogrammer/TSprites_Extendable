@@ -168,6 +168,8 @@ using Player_FSM = FSM<PlayerStateVar, EventVar, PlayerTransitions>;
 
 class Player {
 public:
+    sf::Clock animTimer{};
+    float animDelay{ 0.f };
     sf::Texture tex;
     sf::IntRect currFrame;
     PlayerAnim currAnimation{ PlayerAnim::InAirRight };

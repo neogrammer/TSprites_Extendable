@@ -11,6 +11,8 @@ public:
 	float width{ 84.f }, height{ 84.f }, jumpHeight{ 0.f }, jumpHeightMax{ 300.f };
 	float maxY{ 513.f }, gravity{ 0.0f }, maxGravity{ 980.f };
 	float runSpd{ 2.6f }, maxRunSpd{ 200.f };
+	int currAnimFrameIndex{ 0 };
+	int currAnimFrameCount{ 1 };
 	float dt{ 0.f };
 	bool facingRight{ true };
 
