@@ -40,40 +40,79 @@ struct PlayerTransitions
 
 
 
-    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganMovingLeftEvent& e)
-    {
+  
 
-        return states_player::MovingLeft{ };
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganMovingEvent& e)
+    {
+        //return states_player::Moving{};
+        return states_player::Moving{ };
     }
 
-    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganMovingRightEvent& e)
-    {
-
-        return states_player::MovingRight{ };
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::MovingRight&, const StoppedMovingRightEvent& e)
+    std::optional<PlayerStateVar> operator()(states_player::Moving&, const StoppedMovingEvent& e)
     {
 
         return states_player::Idle{ };
     }
 
-    std::optional<PlayerStateVar> operator()(states_player::MovingRight&, const JumpEvent& e)
+    std::optional<PlayerStateVar> operator()(states_player::Moving&, const BeganShootingEvent& e)
     {
-        return states_player::RisingAndMovingRight{};
+
+        return states_player::MovingAndShooting{ };
+    }
+    std::optional<PlayerStateVar> operator()(states_player::Moving&, const JumpEvent& e)
+    {
+
+        return states_player::RisingAndMoving{ };
+    }
+    std::optional<PlayerStateVar> operator()(states_player::Rising&, const BeganMovingEvent& e)
+    {
+
+        return states_player::RisingAndMoving{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMoving&, const StoppedMovingEvent& e)
+    {
+
+        return states_player::Rising{ };
     }
 
 
-    std::optional<PlayerStateVar> operator()(states_player::MovingLeft&, const StoppedMovingLeftEvent& e)
+
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMoving&, const StoppedMovingEvent& e)
     {
 
-        return states_player::Idle{ };
+        return states_player::Falling{ };
     }
 
-    std::optional<PlayerStateVar> operator()(states_player::MovingLeft&, const JumpEvent& e)
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMoving&, const LandedEvent& e)
     {
-        return states_player::RisingAndMovingLeft{};
+
+        return states_player::Moving{ };
     }
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMoving&, const BeganShootingEvent& e)
+    {
+
+        return states_player::RisingAndMovingAndShooting{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::Falling&, const BeganMovingEvent& e)
+    {
+
+        return states_player::FallingAndMoving{ };
+    }
+
+
+
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMoving&, const ReachedJumpPeakEvent& e)
+    {
+
+        return states_player::FallingAndMoving{};
+        ///  (--jumpHeightCurrent < Rising::JumpHeightMax)
+    }
+
+
 
 
     std::optional<PlayerStateVar> operator()(states_player::Rising&, const ReachedJumpPeakEvent& e)
@@ -81,56 +120,6 @@ struct PlayerTransitions
 
         return states_player::Falling{};
         ///  (--jumpHeightCurrent < Rising::JumpHeightMax)
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::Rising&, const BeganMovingRightEvent& e)
-    {
-
-        return states_player::RisingAndMovingRight{ };
-    }
-    std::optional<PlayerStateVar> operator()(states_player::Rising&, const BeganMovingLeftEvent& e)
-    {
-
-        return states_player::RisingAndMovingLeft{ };
-    }
-
-
-    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingRight&, const ReachedJumpPeakEvent& e)
-    {
-        return states_player::FallingAndMovingRight{};
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingRight&, const StoppedMovingRightEvent& e)
-    {
-        return states_player::Rising{};
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingRight&, const LandedEvent& e)
-    {
-        return states_player::MovingRight{};
-    }
-    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingRight&, const ::StoppedMovingRightEvent& e)
-    {
-        return states_player::Falling{};
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingLeft&, const ReachedJumpPeakEvent& e)
-    {
-        return states_player::FallingAndMovingLeft{};
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingLeft&, const StoppedMovingLeftEvent& e)
-    {
-        return states_player::Rising{};
-    }
-
-    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingLeft&, const LandedEvent& e)
-    {
-        return states_player::MovingLeft{};
-    }
-    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingLeft&, const ::StoppedMovingLeftEvent& e)
-    {
-        return states_player::Falling{};
     }
 
 
@@ -141,18 +130,136 @@ struct PlayerTransitions
         return states_player::Idle{ };
     }
 
-    std::optional<PlayerStateVar> operator()(states_player::Falling&, const BeganMovingRightEvent& e)
-    {
 
-        return states_player::FallingAndMovingRight{ };
-    }
-    std::optional<PlayerStateVar> operator()(states_player::Falling&, const BeganMovingLeftEvent& e)
+    std::optional<PlayerStateVar> operator()(states_player::Idle&, const BeganShootingEvent& e)
     {
-
-        return states_player::FallingAndMovingLeft{ };
+        
+        return states_player::Shooting{ };
     }
 
-   
+
+    std::optional<PlayerStateVar> operator()(states_player::Rising&, const BeganShootingEvent& e)
+    {
+
+        return states_player::RisingAndShooting{};
+    }
+
+    
+    std::optional<PlayerStateVar> operator()(states_player::Shooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::Idle{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::Shooting&, const BeganMovingEvent& e)
+    {
+
+        return states_player::MovingAndShooting{};
+    }
+
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingAndShooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::RisingAndMoving{ };
+
+    }
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingAndShooting&, const StoppedMovingEvent& e)
+    {
+
+        return states_player::RisingAndShooting{ };
+
+    }
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndMovingAndShooting&, const ReachedJumpPeakEvent& e)
+    {
+
+        return states_player::FallingAndMovingAndShooting{ };
+
+    }
+
+
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingAndShooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::FallingAndMoving{ };
+
+    }
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingAndShooting&, const StoppedMovingEvent& e)
+    {
+
+        return states_player::FallingAndShooting{ };
+
+    }
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMovingAndShooting&, const LandedEvent& e)
+    {
+
+        return states_player::MovingAndShooting{ };
+
+    }
+
+
+
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndMoving&, const BeganShootingEvent& e)
+    {
+
+        return states_player::FallingAndMovingAndShooting{ };
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""></param>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    std::optional<PlayerStateVar> operator()(states_player::FallingAndShooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::Falling{ };
+    }
+
+
+  
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndShooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::Rising{ };
+    }
+
+ 
+
+
+    std::optional<PlayerStateVar> operator()(states_player::RisingAndShooting&, const ReachedJumpPeakEvent& e)
+    {
+
+        return states_player::FallingAndShooting{ };
+    }
+
+
+    std::optional<PlayerStateVar> operator()(states_player::MovingAndShooting&, const StoppedShootingEvent& e)
+    {
+
+        return states_player::Moving{ };
+    }
+
+    std::optional<PlayerStateVar> operator()(states_player::MovingAndShooting&, const StoppedMovingEvent& e)
+    {
+
+        return states_player::Shooting{ };
+    }
+    std::optional<PlayerStateVar> operator()(states_player::MovingAndShooting&, const JumpEvent& e)
+    {
+
+        return states_player::RisingAndMovingAndShooting{ };
+    }
+
+    ///
+
+
+
+
+  
+
 
     // default
     template<typename State, typename Event>
@@ -168,8 +275,8 @@ using Player_FSM = FSM<PlayerStateVar, EventVar, PlayerTransitions>;
 
 class Player {
 public:
-
-    bool& baseIsAlive;
+    bool startOfShot{ false };
+    float shotTimer{ 0.f };
     sf::Clock animTimer{};
     float animDelay{ 0.f };
     sf::Texture tex;
@@ -255,9 +362,10 @@ public:
     };
     
 public:
-    Player(float l_posx, float l_posy, bool& l_isAlive);
+    Player();
 
     Player_FSM playerFSM;
+    bool alive{ true };
 
     // logic for how the player interacts with the system defined in this function
     // as you are aware the correct state the user is in, and can code for that specific state logic, while being able to

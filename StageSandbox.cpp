@@ -29,9 +29,14 @@ StageSandbox::StageSandbox(StageMgr& l_mgr)
 
 	bulletTex.loadFromFile("assets/textures/projectiles/bullets/fire03.png");
 	
+	
+	enemies_.emplace_back(Enemy{});
 
-	sprites_.emplace_back(Player{playerPosx, playerPosy, playerIsAlive});
-	sprites_.emplace_back(Enemy{enemyPosx, enemyPosy, enemyIsAlive});
+	//sprites_.push_back(player_);
+	//sprites_.push_back(enemies_[0]);
+	//sprites_.emplace_back(Player{});
+	//sprites_.emplace_back(Enemy{});
+	
 	//sprites_.emplace_back(Bullet{bulletPosx, bulletPosy, bulletIsAlive, bulletTex });
 
 	//backgroundTex.loadFromFile("");
@@ -55,17 +60,59 @@ void StageSandbox::update(const sf::Time& l_dt)
 	// updateTilemap();
 
 
-	updateAllSprites(sprites_, l_dt);
+
+	player_.update(l_dt);
+
+
+	//updateAllSprites(sprites_, l_dt);
+
+	for (auto& e : enemies_)
+	{
+		e.update(l_dt);
+	}
+
+	std::vector<Bullet>::iterator delMe;
+	int size = 0;
+	for (auto ptr = bullets_.begin(); ptr != bullets_.end(); ptr++)
+	{
+		ptr->update(l_dt);
+
+		if (ptr->alive == false)
+		{
+			size++;
+			delMe = ptr;
+			
+		}
+	}
+	if (size > 0)
+	{
+		bullets_.erase(delMe);
+		sprites_.clear();
+	}
+	
+	
+
+
 	if (!justShot) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 			justShot = true;
 			shootTime = sf::Time::Zero;
-			sprites_.emplace_back(Bullet{ playerPosx+60, playerPosy - 35.f, bulletIsAlive, bulletTex });
+
+			bullets_.emplace_back(Bullet{
+				(player_.playerFSM.facingRight) ? player_.playerFSM.posx + 60.f : player_.playerFSM.posx + 13.f,
+				player_.playerFSM.posy + 42.f, 
+				(player_.playerFSM.facingRight) ? "east" : "west", bulletTex });
+
+		
+
+			dispatch(player_.playerFSM, BeganShootingEvent());
+			//sprites_.push_back(bullets_.back());
 			
 
 		}
 	}
+
 	
 	shootTime += l_dt;
 
@@ -90,7 +137,18 @@ void StageSandbox::render(sf::RenderWindow& l_wnd)
 
 	renderBackground(l_wnd);
 	
+	player_.render(l_wnd);
 	
+
+	for (auto& e : enemies_)
+	{
+		e.render(l_wnd);
+	}
+	for (auto& b : bullets_)
+	{
+		
+		b.render(l_wnd);
+	}
 	// render tilemap();
 	tmap.render(l_wnd);
 
@@ -100,7 +158,7 @@ void StageSandbox::render(sf::RenderWindow& l_wnd)
 	// to propagate all the changes to be reflected in what displays on the screen
 
 	// finalizeSprites();
-	renderAllSprites(sprites_, l_wnd);
+	//renderAllSprites(sprites_, l_wnd);
 	return;
 }
 

@@ -5,13 +5,19 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Sprite.hpp"
+#include "Bullet.hpp"
+#include "Player.hpp"
+#include "Enemy.hpp"
 class StageMgr;
 class Stage {
 
 protected:
 
 	StageMgr& mgr_;
+	Player player_;
 	std::vector<Sprite> sprites_;
+	std::vector<Enemy> enemies_;
+	std::vector<Bullet> bullets_;
 
 	/*sf::Texture backgroundTex;
 	sf::Texture tilesetTex;

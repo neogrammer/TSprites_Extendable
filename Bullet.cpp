@@ -1,12 +1,11 @@
 #include "Bullet.hpp"
 #include "Sprite.hpp"
 
-Bullet::Bullet(float l_posx, float l_posy, bool &l_alive, sf::Texture& l_tex, std::string l_direction, float l_bulletSpeed, bool l_friendly)
+Bullet::Bullet(float l_posx, float l_posy, std::string dir2,  sf::Texture& l_tex, std::string l_direction, float l_bulletSpeed, bool l_friendly)
     : tex{&l_tex}
     , m_direction{ l_direction }
     , m_bulletSpeed{ l_bulletSpeed }
     , m_friendly{ l_friendly }
-    , baseIsAlive{l_alive}
 {
     
     posx = 40.f;
@@ -14,7 +13,8 @@ Bullet::Bullet(float l_posx, float l_posy, bool &l_alive, sf::Texture& l_tex, st
     bulletFSM.posx = l_posx;
     bulletFSM.posy = l_posy;
     bulletFSM.vely = 0.f;
-    alive = l_alive;
+    alive = true;
+    m_direction = dir2;
     bulletFSM.velx = (m_direction == "east") ? 400.f : -400.f;
     
 }
@@ -44,20 +44,21 @@ void Bullet::update(const sf::Time& l_dt) {
 
         bulletFSM.posx += bulletFSM.velx * l_dt.asSeconds();
 
-        if (bulletFSM.posx > 800.f)
+        if (bulletFSM.posx > 800.f || bulletFSM.posx < 0.f)
         {
+            
             dispatch(bulletFSM, OffStageEvent{});
         }
     }
     else if (bulletFSM.isType(states_bullet::BulletCollided{}))
     {
         alive = false;
-        baseIsAlive = false;
+        //baseIsAlive = false;
     }
     else if (bulletFSM.isType(states_bullet::BulletOffStage{}))
     {
         alive = false;
-        baseIsAlive = false;
+        //baseIsAlive = false;
 
         std::cout << "Marked for death: Bullet" << std::endl;
     }
@@ -65,7 +66,7 @@ void Bullet::update(const sf::Time& l_dt) {
 
 bool Bullet::isAlive()
 {
-    return baseIsAlive;
+    return alive;
 }
 
 void Bullet::render(sf::RenderWindow& l_wnd) {

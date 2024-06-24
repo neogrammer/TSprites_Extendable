@@ -11,10 +11,11 @@ class Enemy {
 
 public:
 
-    bool& baseIsAlive;
     float posx = 0.f, posy = 0.f;
+    bool alive{ true };
+
 public:
-    Enemy(float l_posx, float l_posy, bool& l_isAlive );
+    Enemy( );
     void update(const sf::Time& l_dt); 
     bool isAlive();
     void render(sf::RenderWindow& l_wnd);

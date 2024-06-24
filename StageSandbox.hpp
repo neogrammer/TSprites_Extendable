@@ -10,6 +10,8 @@ class StageMgr;
 
 class StageSandbox : public Stage
 {
+
+	
 	bool justShot{ false };
 	float shootDelay{ 0.5f };
 	sf::Time shootTime{ sf::Time::Zero };

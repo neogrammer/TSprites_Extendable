@@ -1,11 +1,9 @@
 #include "Enemy.hpp"
 #include "Sprite.hpp"
 
-Enemy::Enemy(float l_posx, float l_posy, bool& l_isAlive)
-    : baseIsAlive{ l_isAlive }
+Enemy::Enemy()
 {
-    posx = l_posy;
-    posy = l_posx;
+   
 }
 
 void Enemy::update(const sf::Time& l_dt) {
@@ -14,7 +12,7 @@ void Enemy::update(const sf::Time& l_dt) {
 
 bool Enemy::isAlive()
 {
-    return baseIsAlive;
+    return alive;
 }
 
 void Enemy::render(sf::RenderWindow& l_wnd) {

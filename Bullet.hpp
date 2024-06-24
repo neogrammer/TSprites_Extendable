@@ -55,7 +55,6 @@ public:
     std::string m_direction;
     float m_bulletSpeed;
     bool m_friendly;
-    bool& baseIsAlive;
 public:
     std::vector<sf::IntRect> animVec = {
            {{0 * 14,0},{14,14}},
@@ -71,7 +70,20 @@ public:
  
 
 
-    Bullet(float l_posx, float l_posy, bool& l_isAlive, sf::Texture& l_tex, std::string l_direction = "east", float l_bulletSpeed = 40.f, bool l_friendly = true);
+    Bullet(float l_posx, float l_posy, std::string dir2, sf::Texture& l_tex, std::string l_direction = "east", float l_bulletSpeed = 40.f, bool l_friendly = true);
+    
+    Bullet(const Bullet& o)
+        :    tex{ o.tex }
+    {
+        posx = 40.f;
+        posy = 100.f;
+        bulletFSM.posx = o.bulletFSM.posx;
+        bulletFSM.posy = o.bulletFSM.posy;
+        bulletFSM.vely = o.bulletFSM.vely;
+        alive = true;
+        bulletFSM.velx = o.bulletFSM.velx;
+
+    }
 
     Bullet_FSM bulletFSM;
 
